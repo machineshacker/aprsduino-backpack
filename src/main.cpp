@@ -48,7 +48,7 @@ SoftwareSerial GPSSerial(GPS_RX_PIN, GPS_TX_PIN);
 
 char APRS_CALLSIGN[] = "KM6WOL";
 int APRS_SSID = 12;
-char APRS_SYMBOL[] = "/[";
+char APRS_SYMBOL = '[';
 
 
 
