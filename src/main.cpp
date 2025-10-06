@@ -10,6 +10,7 @@
 #include <TinyGPS.h>
 #include <LibAPRS.h>
 #include <secrets.h>
+#include "coord_format.h"
 
 
 // Enable this define NEO-6M if you are constantly getting wrong data,
@@ -82,47 +83,6 @@ static char conv_buf[CONV_BUF_SIZE];
 /*****************************************************************************************/
 
 /*****************************************************************************************/
-/*
-**  Convert degrees in long format to APRS string format
-**  DDMM.hhN for latitude and DDDMM.hhW for longitude
-**  D is degrees, M is minutes and h is hundredths of minutes.
-**  http://www.aprs.net/vm/DOS/PROTOCOL.HTM
-*/
-char* deg_to_nmea(long deg, boolean is_lat) {
-  bool is_negative=0;
-  if (deg < 0) is_negative=1;
-
-  // Use the absolute number for calculation and update the buffer at the end
-  deg = labs(deg);
-
-  unsigned long b = (deg % 1000000UL) * 60UL;
-  unsigned long a = (deg / 1000000UL) * 100UL + b / 1000000UL;
-  b = (b % 1000000UL) / 10000UL;
-
-  conv_buf[0] = '0';
-  // in case latitude is a 3 digit number (degrees in long format)
-  if( a > 9999) {
-    snprintf(conv_buf , 6, "%04lu", a);
-  } else {
-    snprintf(conv_buf + 1, 5, "%04lu", a);
-  }
-
-  conv_buf[5] = '.';
-  snprintf(conv_buf + 6, 3, "%02lu", b);
-  conv_buf[9] = '\0';
-  if (is_lat) {
-    if (is_negative) {conv_buf[8]='S';}
-    else conv_buf[8]='N';
-    return conv_buf+1;
-    // conv_buf +1 because we want to omit the leading zero
-    }
-  else {
-    if (is_negative) {conv_buf[8]='W';}
-    else conv_buf[8]='E';
-    return conv_buf;
-    }
-}
-
 void disableGPGLL()
 {
   const char *msg = "PUBX,40,GLL,0,0,0,0,0";
