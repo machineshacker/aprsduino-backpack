@@ -30,7 +30,3 @@
 // -14 Truckers or generally full time drivers
 // -15 generic additional station, digi, mobile, wx, etc
 
-
-#define CALLSIGN "NOCALL"
-#define SSID "12"
-#define SYMBOL "/["

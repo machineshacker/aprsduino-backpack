@@ -38,17 +38,10 @@ SoftwareSerial GPSSerial(GPS_RX_PIN, GPS_TX_PIN);
 // GPS_FIX_LED A3/D17
 #define GPS_FIX_LED A3
 
-// APRS settings
-// #define APRS_CALLSIGN "KM6WOL"
-// #define APRS_SSID 12
-// #define APRS_SYMBOL "/["
-// char *APRS_CALLSIGN[] = {CALLSIGN};
-// int APRS_SSID = {SSID};
-// const char* APRS_SYMBOL = {SYMBOL};
 
 char APRS_CALLSIGN[] = "KM6WOL";
 int APRS_SSID = 12;
-char APRS_SYMBOL = '[';
+char APRS_SYMBOL = '<';
 
 
 
