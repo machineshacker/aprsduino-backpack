@@ -11,6 +11,8 @@
 #include <LibAPRS.h>
 #include <secrets.h>
 #include "coord_format.h"
+#include <Adafruit_NeoPixel.h>
+
 
 
 // Enable this define NEO-6M if you are constantly getting wrong data,
@@ -38,10 +40,19 @@ SoftwareSerial GPSSerial(GPS_RX_PIN, GPS_TX_PIN);
 // GPS_FIX_LED A3/D17
 #define GPS_FIX_LED A3
 
-
+// no slash used in symbol table
 char APRS_CALLSIGN[] = "KM6WOL";
 int APRS_SSID = 12;
 char APRS_SYMBOL = '<';
+
+
+
+// NeoPixel settings
+//Neopixel 1: GPS, Neopixel 2: Status
+#define LED_PIN  2
+#define LED_COUNT 2
+
+Adafruit_NeoPixel statusled(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 
 
@@ -150,11 +161,32 @@ void setup()
 //   GPSSerial.begin(4800);
 //   GPSSerial.flush();
 // #endif
+  statusled.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
+  statusled.clear();            // Turn OFF all pixels ASAP
+  statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+  statusled.setPixelColor(0, 255,0,0); 
+  statusled.setPixelColor(1, 255,0,0); 
+  statusled.show();
+  // delay(500);
+  // statusled.clear();            // Turn OFF all pixels ASAP
+  // statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+  // statusled.setPixelColor(0, 0,255,0); 
+  // statusled.setPixelColor(1, 0,255,0); 
+  // statusled.show();
+  // delay(500);
+  // statusled.clear();            // Turn OFF all pixels ASAP
+  // statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+  // statusled.setPixelColor(0, 0,0,255); 
+  // statusled.setPixelColor(1, 0,0,255); 
+  // statusled.show(); 
+
+
 
   // Reduce NMEA messages
   disableGPGLL();
   pinMode(BUTTON_PIN, INPUT_PULLUP);
   pinMode(GPS_FIX_LED,OUTPUT);
+
 
   Serial.println(F("Arduino APRS Tracker"));
 
@@ -253,6 +285,11 @@ void loop()
     // It is not an ideal check but provides a good indication, could be no fix/GPS is not connected/GPS is sending garbage
     Serial.println(F("No fix detected"));
     smartdelay(1000);
+    statusled.clear();            // Turn OFF all pixels ASAP
+    statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+    statusled.setPixelColor(0, 255,0,0); 
+    statusled.setPixelColor(1, 0,255,0); 
+    statusled.show();
     gps.get_position(&lat, &lon, &age);
   }
 
@@ -291,6 +328,11 @@ void loop()
     courseDelta = abs (courseDelta) ;
 
     digitalWrite(GPS_FIX_LED, !digitalRead(GPS_FIX_LED)); // Toggle the GPS_FIX_LED on/off
+    statusled.clear();            // Turn OFF all pixels ASAP
+    statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+    statusled.setPixelColor(0, 0,255,0); 
+    statusled.setPixelColor(1, 0,255,0); 
+    statusled.show();
 
     print_date(gps);
     print_float(flat, TinyGPS::GPS_INVALID_F_ANGLE, 10, 6);
@@ -338,6 +380,11 @@ void loop()
       while(digitalRead(BUTTON_PIN)==0) {}; //debounce
       Serial.println(F("MANUAL UPDATE"));
       locationUpdate();
+      statusled.clear();            // Turn OFF all pixels ASAP
+      statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
+      statusled.setPixelColor(0, 0,0,255); 
+      statusled.setPixelColor(1, 0,0,255); 
+      statusled.show();
     }
   }
   newData = false;
