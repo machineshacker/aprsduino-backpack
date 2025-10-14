@@ -43,7 +43,7 @@ SoftwareSerial GPSSerial(GPS_RX_PIN, GPS_TX_PIN);
 // no slash used in symbol table
 char APRS_CALLSIGN[] = "KM6WOL";
 int APRS_SSID = 12;
-char APRS_SYMBOL = '<';
+char APRS_SYMBOL = 'b';
 
 
 
@@ -114,7 +114,7 @@ void locationUpdate() {
 //Source: APRS protocol
 //Which means /A=000XXXArduino APRS Tracker (29 characters)
 
-  char comment []= "Arduino APRS Tracker";
+  char comment []= "AVR APRS Beacon";
   char temp[8];
   char APRS_comment [32]="/A=";
 
@@ -144,6 +144,11 @@ void locationUpdate() {
 //    GPSSerial.begin(4800);
 // #else
   GPSSerial.begin(9600);
+      statusled.clear();    
+      statusled.setBrightness(50); 
+      statusled.setPixelColor(0, 0,0,255); 
+      statusled.setPixelColor(1, 0,0,255); 
+      statusled.show();
 //#endif
 }
 
@@ -380,11 +385,6 @@ void loop()
       while(digitalRead(BUTTON_PIN)==0) {}; //debounce
       Serial.println(F("MANUAL UPDATE"));
       locationUpdate();
-      statusled.clear();            // Turn OFF all pixels ASAP
-      statusled.setBrightness(50); // Set BRIGHTNESS to about 1/5 (max = 255) 
-      statusled.setPixelColor(0, 0,0,255); 
-      statusled.setPixelColor(1, 0,0,255); 
-      statusled.show();
     }
   }
   newData = false;
