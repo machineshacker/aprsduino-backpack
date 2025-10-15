@@ -57,10 +57,16 @@ Adafruit_NeoPixel statusled(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
 
 // SmartBeaconing(tm) Setting  http://www.hamhud.net/hh2/smartbeacon.html implementation by LU5EFN
+// SmartBeaconing is an algorithm created by Steve Bragg for adjusting the transmit rate by the speed and heading changes on the tracker. 
+//As the tracker moves faster, the transmit rate will increase linearly. 
+//SmartBeaconing also uses CornerPegging to cause transmissions to occur when the tracker turns corners. 
+//In order to use SmartBeaconing, the GPS must send speed and heading information with the GPRMC sentence.
 
 #define LOW_SPEED 5 // [km/h]
 #define HIGH_SPEED 90
 
+//1750 :: 1750000ms/1750 seconds/29.16 minutes
+//175 :: 175000ms/175 seconds/2.916 minutes
 #define SLOW_RATE 1750 // [seg]
 #define FAST_BEACON_RATE  175
 
